@@ -1,0 +1,39 @@
+<template>
+  <div>
+    <button class="mainButton">
+      {{ buttonTitle }}
+    </button>
+  </div>
+</template>
+
+<script setup>
+defineProps({
+  buttonTitle: {type: String, default: 'Добавить'}
+})
+</script>
+
+<style lang="scss" scoped>
+.mainButton {
+  width: fit-content;
+  min-width: 100px;
+  height: 45px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 2.5px solid #E0E1E4;
+  box-shadow: 0px 0px 20px -20px;
+  cursor: pointer;
+  background-color: white;
+  transition: all 0.2s ease-in-out 0ms;
+  user-select: none;
+  font-family: 'Poppins', sans-serif;
+}
+
+.mainButton:hover {
+  background-color: #F2F2F2;
+  box-shadow: 0px 0px 20px -18px;
+}
+
+.mainButton:active {
+  transform: scale(0.95);
+}
+</style>

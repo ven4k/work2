@@ -1,0 +1,16 @@
+[
+  {
+    "id": "98955486",
+    "lastName": "Иванов",
+    "firstName": "Иван",
+    "patronymic": "Иванович",
+    "passport": "1025.65899",
+    "dateBirth": "05.03.1985",
+    "phone": "89123456789",
+    "email": "ivanov@mail.ru",
+    "post": "Работник1",
+    "department": "Ремонтный",
+    "tariff": "Тариф2",
+    "address": "ул. Ленина, д. 15"
+  }
+]

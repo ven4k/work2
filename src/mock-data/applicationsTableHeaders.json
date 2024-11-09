@@ -1,0 +1,13 @@
+{
+    "application_id": "Номер заявки",
+    "catalog_id": "Каталожный номер",
+    "catalog_item_name": "Наименование",
+    "catalog_item_count": "Количество",
+    "master_id": "Личный номер мастера",
+    "fullname_master": "ФИО мастера",
+    "fullname_manager": "Менеджер",
+    "date_create": "Дата создания",
+    "operation_type": "Тип операции",
+    "status": "Статус"
+}
+
