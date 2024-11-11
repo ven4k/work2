@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { ref, shallowRef, onMounted } from "vue";
+import { ref, onMounted, shallowRef } from "vue";
 import { useRouter } from "vue-router";
 import Clients from "../Clients/Clients.vue";
 import Employees from "../Employees/Employees.vue";
@@ -45,12 +45,12 @@ onMounted(() => {
   if (sessionStorage.getItem("isLogged")) {
     isAdmin.value = true;
     role.value = 'Admin'
-    contentData.value.push({
-      cardName: "Мастера",
-      description: "Учет клиентов",
-      component: Clients,
-      img: "clients.svg",
-    });
+    contentData.value = [
+      ...contentData.value, {
+        componentTitle: "Мастера",
+        component: Clients,
+      },
+    ]
   } else {
     role.value = 'Master'
     isAdmin.value = false;

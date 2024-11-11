@@ -13,12 +13,12 @@
         </option>
       </select>
     </div>
-    <MainButton class="createBtn" @click="handleCreateData" :disabled="isDisabledBtn()">Создать</MainButton>
+    <MainButton class="createBtn" @click="handleCreateData" :disabled="isDisabledBtn">Создать</MainButton>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
 import MainButton from "../Buttons/MainButton/MainButton.vue";
 
 const emit = defineEmits(["close", "addData"]);
@@ -27,8 +27,9 @@ const props = defineProps({
   catalog: { type: Array, default: () => [] },
   clients: { type: Array, default: () => [] },
   employees: { type: Array, default: () => [] },
-  workType: { type: Array, default: () => [] },
+  operationType: { type: Array, default: () => [] },
   status: { type: Array, default: () => [] },
+  isAdmin: { type: Boolean, default: true }
 });
 
 const clientsData = ref(
@@ -46,16 +47,23 @@ const catalogData = ref(
     return `${item.name} ${item.catalog_id}`;
   })
 );
+const formValues = ref({
+  master: "",
+  manager: "",
+  catalog: "",
+  opertionType: "",
+  status: props.isAdmin ? "" : props.status[0]
+});
 
-const selectData = [
+const selectData = ref([
   {
     label: "Мастера",
-    dataName: "client",
+    dataName: "master",
     data: clientsData.value,
   },
   {
     label: "Менеджеры",
-    dataName: "employee",
+    dataName: "manager",
     data: employeesData.value,
   },
   {
@@ -65,33 +73,27 @@ const selectData = [
   },
   {
     label: "Типы операций",
-    dataName: "workType",
-    data: props.workType,
+    dataName: "opertionType",
+    data: props.operationType,
   },
-  {
+
+]);
+
+onMounted(() => {
+  if(props.isAdmin) {
+    selectData.value.push({
     label: "Статус",
     dataName: "status",
     data: props.status,
-  },
-];
+  })
+  }
+})
 
-const formValues = ref({
-  client: "",
-  employee: "",
-  catalog: "",
-  workType: "",
-  status: "",
+const isDisabledBtn = computed(() => {
+  // return !Object.values(formValues.value).every(item => item.length)
+  return false
 });
 
-const isDisabledBtn = () => {
-  return !(
-    formValues.value.client.length &&
-    formValues.value.employee.length &&
-    formValues.value.catalog.length &&
-    formValues.value.workType.length &&
-    formValues.value.status.length
-  );
-};
 const handleCreateData = () => {
   emit("addData", formValues.value);
   emit("close");

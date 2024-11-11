@@ -14,6 +14,7 @@ const store = createStore({
     clients: JSON.parse(sessionStorage.getItem('clients')) || clientJSON,
     employees: JSON.parse(sessionStorage.getItem('employees')) || employeesJSON,
     catalog: JSON.parse(sessionStorage.getItem('catalog')) || catalogJSON,
+    managerApplicationData: [],
   },
   mutations: {
     updateClients(state, payload) {
@@ -24,6 +25,9 @@ const store = createStore({
     },
     updateCatalog(state, payload) {
       state.catalog = payload
+    },
+    updateManagerApplicationData(state, payload) {
+      state.managerApplicationData = [...state.managerApplicationData, payload]
     }
   },
 });
