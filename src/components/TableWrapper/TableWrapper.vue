@@ -18,14 +18,17 @@
               <span v-if="!isApplication">
                 {{ row[key] ? row[key] : "-" }}
               </span>
-              <span v-if="key !== 'status' && isApplication">
+              <span v-if="isApplication && !isPossibleDeleteItem && key !== 'status'">
                 {{ row[key] ? row[key] : "-" }}
               </span>
-              <select v-if="key === 'status' && isApplication" @change="handleUpdateTableData($event, row.application_id)">
+              <span v-if="isApplication && isPossibleDeleteItem && key !== 'status'">
+                {{ row[key] ? row[key] : "-" }}
+              </span>
+              <select v-if="(isApplication && isPossibleDeleteItem) && key === 'status'" @change="handleUpdateTableData($event, row.application_id)">
                 <option value="">Не выбрано</option>
                 <option
-                  :selected="item === row.status"
                   v-for="item in applicationStatusData"
+                  :selected="item === row.status"
                   :value="item"
                 >
                   {{ item }}
@@ -55,7 +58,7 @@
 <script setup>
 import MainButton from "../Buttons/MainButton/MainButton.vue";
 
-defineProps({
+const props = defineProps({
   tableTitle: { type: String, default: "" },
   theader: { type: Array, default: () => [] },
   tbody: { type: Array, default: () => [] },
@@ -69,6 +72,7 @@ const emit = defineEmits(["addData", "deleteData", "updateTableData"]);
 const handleUpdateTableData = (status, applicationId) => {
   emit("updateTableData", status.target.value, applicationId);
 };
+console.log((props.isApplication && !props.isPossibleDeleteItem))
 </script>
 
 <style lang="scss">

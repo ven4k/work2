@@ -90,8 +90,7 @@ onMounted(() => {
 })
 
 const isDisabledBtn = computed(() => {
-  // return !Object.values(formValues.value).every(item => item.length)
-  return false
+  return !Object.values(formValues.value).every(item => item.length)
 });
 
 const handleCreateData = () => {

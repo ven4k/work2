@@ -56,7 +56,7 @@ const isOpenAddFormPopup = ref(false);
 const applicationsBodyData = ref(applications);
 
 const operationType = ref(["Выдача", "Сдача", "Операция3", "Операция4"]);
-const statuses = ref(["На рассмотрении", "Статус2", "Статус3", "Статус4"]);
+const statuses = ref(["В процессе согласования", "Одобрено", "Отклонено"]);
 
 const handleTogglePopup = () => {
   isOpenAddFormPopup.value = !isOpenAddFormPopup.value;
@@ -126,6 +126,9 @@ const handleUpdateTableData = (status, applicationId) => {
     }
     return el;
   });
+  if(status === 'Одобрено' || status === 'Отклонено') {
+    store.commit('updateManagerApplicationData', applicationsBodyData.value)
+  }
 };
 
 onMounted(() => {
