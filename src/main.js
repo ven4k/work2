@@ -8,13 +8,15 @@ import { createStore } from "vuex";
 import clientJSON from './mock-data/clients.json'
 import employeesJSON from './mock-data/employees.json'
 import catalogJSON from './mock-data/catalog.json'
+import applicationsJSON from './mock-data/applications.json'
 
 const store = createStore({
   state: {
     clients: JSON.parse(sessionStorage.getItem('clients')) || clientJSON,
     employees: JSON.parse(sessionStorage.getItem('employees')) || employeesJSON,
     catalog: JSON.parse(sessionStorage.getItem('catalog')) || catalogJSON,
-    managerApplicationData: [],
+    managerApplicationData: JSON.parse(sessionStorage.getItem('managerApplications')) || applicationsJSON,
+    masterApplicationData: JSON.parse(sessionStorage.getItem('masterApplications')) || [],
   },
   mutations: {
     updateClients(state, payload) {
@@ -27,7 +29,10 @@ const store = createStore({
       state.catalog = payload
     },
     updateManagerApplicationData(state, payload) {
-      state.managerApplicationData = [...state.managerApplicationData, payload]
+      state.managerApplicationData = payload
+    },
+    updateMasterApplicationData(state, payload) {
+      state.masterApplicationData = payload
     }
   },
 });

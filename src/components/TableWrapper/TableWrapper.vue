@@ -18,7 +18,7 @@
               <span v-if="!isApplication">
                 {{ row[key] ? row[key] : "-" }}
               </span>
-              <span v-if="isApplication && !isPossibleDeleteItem && key !== 'status'">
+              <span v-if="isApplication && !isPossibleDeleteItem">
                 {{ row[key] ? row[key] : "-" }}
               </span>
               <span v-if="isApplication && isPossibleDeleteItem && key !== 'status'">
@@ -35,9 +35,9 @@
                 </option>
               </select>
             </td>
-            <td v-if="isApplication && isPossibleDeleteItem" style="width: 10%">
-              <input type="checkbox" />
-              <label style="margin-left: 4px;">Одобрено</label>
+            <!-- && row.status !== 'Одобрено' -->
+            <td v-if="isApplication && !isPossibleDeleteItem" style="width: 10%">
+              <button @click="handleAcceptAplication(row.application_id, row.operation_type, row.catalog_item_name, row.catalog_item_count, row.catalog_id)">Выполнить</button>
             </td>
             <td v-if="isPossibleDeleteItem" @click="$emit('deleteData', row)">
               X
@@ -68,11 +68,13 @@ const props = defineProps({
   isApplication: { type: Boolean, default: false },
   applicationStatusData: { type: Array, default: () => [] },
 });
-const emit = defineEmits(["addData", "deleteData", "updateTableData"]);
+const emit = defineEmits(["addData", "deleteData", "updateTableData", "acceptApplication"]);
 const handleUpdateTableData = (status, applicationId) => {
   emit("updateTableData", status.target.value, applicationId);
 };
-console.log((props.isApplication && !props.isPossibleDeleteItem))
+const handleAcceptAplication = (applicationId, action, itemCount, itemId) => {
+  emit('acceptApplication', applicationId, action, itemCount, itemId)
+}
 </script>
 
 <style lang="scss">

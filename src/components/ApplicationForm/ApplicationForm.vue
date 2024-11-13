@@ -2,7 +2,7 @@
   <TableWrapper
     tableTitle="Заявки"
     :theader="Object.values(applicationTableHeader)"
-    :tbody="applicationsBodyData"
+    :tbody="isAdmin ? applicationsBodyDataManager : applicationsBodyDataMaster"
     isApplication
     :applicationStatusData="statuses"
     addBtnText="Создать заявку"
@@ -11,6 +11,7 @@
     @addData="handleTogglePopup"
     @deleteData="handleDeleteData"
     @updateTableData="handleUpdateTableData"
+    @acceptApplication="handleAcceptAplication"
   />
   <PopupWrapper
     :isOpenPopup="isOpenAddFormPopup"
@@ -53,7 +54,8 @@ const props = defineProps({
 
 const { notify } = useNotification();
 const isOpenAddFormPopup = ref(false);
-const applicationsBodyData = ref(applications);
+const applicationsBodyDataManager = ref([]);
+const applicationsBodyDataMaster = ref([]);
 
 const operationType = ref(["Выдача", "Сдача", "Операция3", "Операция4"]);
 const statuses = ref(["В процессе согласования", "Одобрено", "Отклонено"]);
@@ -97,11 +99,9 @@ const handleAddData = (data) => {
     operation_type: opertionType,
     status: status,
   };
-  if(props.isAdmin) {
-    applicationsBodyData.value = [...applicationsBodyData.value, addData];
-  } else {
-    store.commit('updateManagerApplicationData', addData)
-  }
+    applicationsBodyDataManager.value = [...applicationsBodyDataManager.value, addData];
+    store.commit('updateManagerApplicationData', [...applicationsBodyDataManager.value, addData])
+
   notify({
     duration: 3000,
     type: "success",
@@ -109,8 +109,8 @@ const handleAddData = (data) => {
   });
 };
 const handleDeleteData = (data) => {
-  applicationsBodyData.value = applicationsBodyData.value.filter(
-    (el) => el.phone !== data.phone
+  applicationsBodyDataManager.value = applicationsBodyDataManager.value.filter(
+    (el) => el.application_id !== data.application_id
   );
   notify({
     text: "Заявка удалена",
@@ -120,32 +120,80 @@ const handleDeleteData = (data) => {
 };
 
 const handleUpdateTableData = (status, applicationId) => {
-  applicationsBodyData.value = applicationsBodyData.value.map((el) => {
+  applicationsBodyDataManager.value = applicationsBodyDataManager.value.map((el) => {
     if (el.application_id === applicationId) {
-      return { ...el, status };
+      if(status === 'Одобрено' || status === 'Отклонено') {
+        store.commit('updateMasterApplicationData', { ...el, status })
+      }
+      return [ ...el, status ];
     }
     return el;
   });
-  if(status === 'Одобрено' || status === 'Отклонено') {
-    store.commit('updateManagerApplicationData', applicationsBodyData.value)
-  }
+  store.commit('updateManagerApplicationData', applicationsBodyDataManager.value);
 };
 
+const handleAcceptAplication = (applicationId, action, itemCount, itemId) => {
+  catalogJSON.value = catalogJSON.value.map(el => {
+    if (el.catalog_id === itemId) {
+      let data
+      if(action === 'Выдача') {
+        data = {
+          ...el,
+          leftCount: el.leftCount - itemCount
+        }
+      }
+      if(action === 'Сдача') {
+        data = {
+          ...el,
+          leftCount: el.leftCount + itemCount
+        }
+      }
+      return data
+    }
+    return el;
+  });
+  applicationsBodyDataManager.value = applicationsBodyDataManager.value.filter(el => el.application_id !== applicationId)
+  store.commit('updateManagerApplicationData', applicationsBodyDataManager.value)
+  store.commit('updateCatalogData', catalogJSON.value);
+}
+
 onMounted(() => {
-  const sessionStorageApplications = sessionStorage.getItem("applications");
-  const parsedsessionStorageApplications = JSON.parse(
-    sessionStorageApplications
-  );
-  if (sessionStorageApplications) {
-    applicationsBodyData.value = parsedsessionStorageApplications;
+  const sessionStorageApplicationsManager = sessionStorage.getItem("managerApplications");
+  const sessionStorageApplicationsMaster = sessionStorage.getItem("masterApplications");
+
+  if (props.isAdmin) {
+    if (sessionStorageApplicationsManager) {
+      applicationsBodyDataManager.value = JSON.parse(sessionStorageApplicationsManager);
+    } else {
+      applicationsBodyDataManager.value = store.state.managerApplicationData;
+    }
+  } else {
+    if (sessionStorageApplicationsMaster) {
+      applicationsBodyDataMaster.value = JSON.parse(sessionStorageApplicationsMaster);
+    } else {
+      applicationsBodyDataMaster.value = store.state.masterApplicationData;
+    }
   }
 });
 onUnmounted(() => {
-  sessionStorage.setItem(
-    "applications",
-    JSON.stringify(applicationsBodyData.value)
+  if(props.isAdmin) {
+    sessionStorage.setItem(
+    "managerApplications",
+    JSON.stringify(applicationsBodyDataManager.value)
   );
+  } else {
+    sessionStorage.setItem(
+    "managerApplications",
+    JSON.stringify(applicationsBodyDataManager.value)
+  );
+    sessionStorage.setItem(
+    "masterApplications",
+    JSON.stringify(applicationsBodyDataMaster.value)
+  );
+  }
 });
+
+console.log('applicationsBodyDataManager', applicationsBodyDataManager)
 </script>
 
 <style lang="scss"></style>
