@@ -17,6 +17,7 @@ const store = createStore({
     catalog: JSON.parse(sessionStorage.getItem('catalog')) || catalogJSON,
     managerApplicationData: JSON.parse(sessionStorage.getItem('managerApplications')) || applicationsJSON,
     masterApplicationData: JSON.parse(sessionStorage.getItem('masterApplications')) || [],
+    archiveData: JSON.parse(sessionStorage.getItem('archiveData')) || [],
   },
   mutations: {
     updateClients(state, payload) {
@@ -33,6 +34,9 @@ const store = createStore({
     },
     updateMasterApplicationData(state, payload) {
       state.masterApplicationData = payload
+    },
+    updateArchive(state, payload) {
+      state.archiveData = payload
     }
   },
 });

@@ -15,6 +15,7 @@ import Employees from "../Employees/Employees.vue";
 import Catalog from "../Catalog/Catalog.vue";
 import ApplicationForm from "../ApplicationForm/ApplicationForm.vue";
 import NavMenu from "../NavMenu/NavMenu.vue";
+import Archive from "../Archive/Archive.vue";
 
 const router = useRouter();
 const isAdmin = ref(true);
@@ -33,6 +34,10 @@ const contentData = shallowRef([
     componentTitle: "Заявки",
     component: ApplicationForm,
   },
+  {
+    componentTitle: "Архив",
+    component: Archive
+  }
 ]);
 
 const choosedContentDataIndex = ref(0);

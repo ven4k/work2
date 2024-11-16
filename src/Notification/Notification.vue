@@ -38,7 +38,7 @@ export default {
     },
     close: {
       type: Function,
-    }
+    },
   },
 };
 </script>
@@ -101,7 +101,7 @@ export default {
   }
 
   .fa {
-    font-size: 16px;
+    font-size: 24px;
   }
 }
 </style>

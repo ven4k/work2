@@ -13,7 +13,26 @@
         </option>
       </select>
     </div>
-    <MainButton class="createBtn" @click="handleCreateData" :disabled="isDisabledBtn">Создать</MainButton>
+    <div
+      class="errorText"
+      v-if="formValues.catalog.length && catalogItemCount?.leftCount < 1"
+    >
+      Извините, но выбранного вами товара нет в наличии :(
+    </div>
+    <input
+      class="catalogItemCount"
+      type="number"
+      v-model="formValues.count"
+      :max="catalogItemCount?.leftCount"
+      placeholder="Количество"
+      @input="validateCount"
+    />
+    <MainButton
+      class="createBtn"
+      @click="handleCreateData"
+      :disabled="isDisabledBtn"
+      >Создать</MainButton
+    >
   </div>
 </template>
 
@@ -29,9 +48,20 @@ const props = defineProps({
   employees: { type: Array, default: () => [] },
   operationType: { type: Array, default: () => [] },
   status: { type: Array, default: () => [] },
-  isAdmin: { type: Boolean, default: true }
+  isAdmin: { type: Boolean, default: true },
 });
 
+const formValues = ref({
+  master: "",
+  manager: "",
+  catalog: "",
+  count: "",
+  opertionType: "",
+  status: props.isAdmin ? "" : props.status[0],
+});
+const catalogId = computed(() =>
+  formValues.value.catalog.split(" ").slice(-1).join(" ")
+);
 const clientsData = ref(
   props.clients.map((item) => {
     return `${item.lastName} ${item.firstName} ${item.patronymic} ${item.phone}`;
@@ -47,13 +77,9 @@ const catalogData = ref(
     return `${item.name} ${item.catalog_id}`;
   })
 );
-const formValues = ref({
-  master: "",
-  manager: "",
-  catalog: "",
-  opertionType: "",
-  status: props.isAdmin ? "" : props.status[0]
-});
+const catalogItemCount = computed(() =>
+  props.catalog.find((item) => item.catalog_id === catalogId.value)
+);
 
 const selectData = ref([
   {
@@ -76,21 +102,30 @@ const selectData = ref([
     dataName: "opertionType",
     data: props.operationType,
   },
-
 ]);
 
-onMounted(() => {
-  if(props.isAdmin) {
-    selectData.value.push({
-    label: "Статус",
-    dataName: "status",
-    data: props.status,
-  })
+const validateCount = (count) => {
+  if (formValues.value.count > catalogItemCount.value.leftCount) {
+    formValues.value.count = catalogItemCount.value.leftCount;
+  } else {
+    formValues.value.count = count.target.value;
   }
-})
+};
+onMounted(() => {
+  if (props.isAdmin) {
+    selectData.value.push({
+      label: "Статус",
+      dataName: "status",
+      data: props.status,
+    });
+  }
+});
 
 const isDisabledBtn = computed(() => {
-  return !Object.values(formValues.value).every(item => item.length)
+  return (
+    !Object.values(formValues.value).every((item) => item.length) ||
+    catalogItemCount.value.leftCount < 1
+  );
 });
 
 const handleCreateData = () => {
@@ -135,5 +170,14 @@ const handleCreateData = () => {
 }
 .createBtn {
   margin-top: 24px;
+}
+.errorText {
+  font-size: 18px;
+  color: red;
+}
+.catalogItemCount {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
 }
 </style>

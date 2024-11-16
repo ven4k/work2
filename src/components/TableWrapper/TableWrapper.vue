@@ -35,9 +35,8 @@
                 </option>
               </select>
             </td>
-            <!-- && row.status !== 'Одобрено' -->
-            <td v-if="isApplication && !isPossibleDeleteItem" style="width: 10%">
-              <button @click="handleAcceptAplication(row.application_id, row.operation_type, row.catalog_item_name, row.catalog_item_count, row.catalog_id)">Выполнить</button>
+            <td v-if="isApplication && !isPossibleDeleteItem && row.status !== 'Одобрено'" style="width: 10%">
+              <button @click="handleAcceptAplication(row.application_id, row.operation_type, row.catalog_item_count, row.catalog_id)">Выполнить</button>
             </td>
             <td v-if="isPossibleDeleteItem" @click="$emit('deleteData', row)">
               X
@@ -45,6 +44,7 @@
           </tr>
         </tbody>
       </table>
+      <div class="emptyTable" v-if="!tbody.length">Здесь пока ничего нет :(</div>
     </div>
     <MainButton
       v-if="isPossibleAddItem"
@@ -62,7 +62,7 @@ const props = defineProps({
   tableTitle: { type: String, default: "" },
   theader: { type: Array, default: () => [] },
   tbody: { type: Array, default: () => [] },
-  isPossibleAddItem: { type: Boolean, default: () => [] },
+  isPossibleAddItem: { type: Boolean, default: false },
   isPossibleDeleteItem: { type: Boolean, default: false },
   addBtnText: { type: String, default: "" },
   isApplication: { type: Boolean, default: false },
@@ -73,6 +73,7 @@ const handleUpdateTableData = (status, applicationId) => {
   emit("updateTableData", status.target.value, applicationId);
 };
 const handleAcceptAplication = (applicationId, action, itemCount, itemId) => {
+  console.log('click')
   emit('acceptApplication', applicationId, action, itemCount, itemId)
 }
 </script>
@@ -121,5 +122,10 @@ const handleAcceptAplication = (applicationId, action, itemCount, itemId) => {
 }
 .tableAddBtn {
   margin: 10px 0 0 0;
+}
+.emptyTable {
+  font-size: 24px;
+  text-align: center;
+  padding: 20px;
 }
 </style>

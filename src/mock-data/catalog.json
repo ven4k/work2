@@ -5,5 +5,12 @@
     "count": "100",
     "leftCount": "80",
     "unitType": "пачка"
+  },
+  { 
+    "catalog_id": "1353234",
+    "name": "Шуруп",
+    "count": "100",
+    "leftCount": "80",
+    "unitType": "пачка"
   }
 ]
