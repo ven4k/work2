@@ -15,7 +15,7 @@
     </div>
     <div
       class="errorText"
-      v-if="formValues.catalog.length && catalogItemCount?.leftCount < 1"
+      v-if="formValues.opertionType === 'Выдача' && catalogItemCount?.leftCount < 1"
     >
       Извините, но выбранного вами товара нет в наличии :(
     </div>
@@ -57,7 +57,7 @@ const formValues = ref({
   catalog: "",
   count: "",
   opertionType: "",
-  status: props.isAdmin ? "" : props.status[0],
+  status: props.isAdmin ? props.status[1] : props.status[0],
 });
 const catalogId = computed(() =>
   formValues.value.catalog.split(" ").slice(-1).join(" ")
@@ -111,15 +111,6 @@ const validateCount = (count) => {
     formValues.value.count = count.target.value;
   }
 };
-onMounted(() => {
-  if (props.isAdmin) {
-    selectData.value.push({
-      label: "Статус",
-      dataName: "status",
-      data: props.status,
-    });
-  }
-});
 
 const isDisabledBtn = computed(() => {
   return (

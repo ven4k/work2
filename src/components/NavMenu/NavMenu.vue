@@ -29,6 +29,7 @@ const props = defineProps({
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  text-align: center;
   &__item {
     padding: 2px 20px;
     cursor: pointer;

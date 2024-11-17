@@ -9,7 +9,6 @@
               {{ header }}
             </th>
             <th v-if="isPossibleDeleteItem"></th>
-            <th v-if="isApplication"></th>
           </tr>
         </thead>
         <tbody>

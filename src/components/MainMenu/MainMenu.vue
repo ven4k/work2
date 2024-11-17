@@ -35,7 +35,7 @@ const contentData = shallowRef([
     component: ApplicationForm,
   },
   {
-    componentTitle: "Архив",
+    componentTitle: "Архив заявок",
     component: Archive
   }
 ]);

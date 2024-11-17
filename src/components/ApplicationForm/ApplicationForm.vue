@@ -46,7 +46,6 @@ const store = useStore();
 const clientsJSON = computed(() => store.state.clients);
 const employeesJSON = computed(() => store.state.employees);
 const catalogJSON = computed(() => store.state.catalog);
-const archivedItems = computed(() => store.state.archiveData)
 const updatedArchivedItems = ref([])
 
 const props = defineProps({
@@ -113,9 +112,9 @@ const handleAddData = (data) => {
   });
 };
 const handleDeleteData = (data) => {
-  applicationsBodyDataManager.value = applicationsBodyDataManager.value.filter(
-    (el) => el.application_id !== data.application_id
-  );
+  const updatedData = {...data, status: 'Удалён'}
+  updatedArchivedItems.value = [...updatedArchivedItems.value, updatedData]
+  updateArchiveData(data.application_id)
   updateAplicationData()
   notify({
     text: "Заявка удалена",
@@ -128,18 +127,22 @@ const handleUpdateTableData = (status, applicationId) => {
   applicationsBodyDataManager.value = applicationsBodyDataManager.value.map(
     (el) => {
       if (el.application_id === applicationId) {
-        if (status === "Одобрено" || status === "Отклонено") {
-          store.commit("updateMasterApplicationData", [el]);
+        let updatedData
+        if (status === "Одобрено") {
+          updatedData = {...el, status}
+          applicationsBodyDataMaster.value = [...applicationsBodyDataMaster.value, updatedData]
+        }
+        if(status === 'Отклонено') {
+          updatedData = {...el, status}
+          updatedArchivedItems.value = [...updatedArchivedItems.value, updatedData];
         }
         return { ...el, status };
       }
       return el;
     }
   );
-  store.commit(
-    "updateManagerApplicationData",
-    applicationsBodyDataManager.value
-  );
+  updateArchiveData(applicationId)
+  updateAplicationData()
   notify({
     text: "Статус обновлён!",
     type: "success",
@@ -168,22 +171,12 @@ const handleAcceptAplication = (applicationId, action, itemCount, itemId) => {
     return el
   });
   store.commit("updateCatalog", newCatalog);
-  setApplicationToArchive(applicationId)
+  const archivedItem = applicationsBodyDataMaster.value.find(el => el.application_id === applicationId)
+  updatedArchivedItems.value = [...updatedArchivedItems.value, archivedItem]
+  updateArchiveData(applicationId)
   updateAplicationData()
-  updateArchiveData()
 };
 
-const setApplicationToArchive = (applicationId) => {
-  applicationsBodyDataMaster.value = applicationsBodyDataMaster.value.filter(
-    (el) => el.application_id !== applicationId
-  );
-  applicationsBodyDataManager.value = applicationsBodyDataManager.value.filter(
-    (el) => el.application_id !== applicationId
-  );
-  updatedArchivedItems.value = [...archivedItems.value, applicationsBodyDataMaster.value.filter(
-    (el) => el.application_id === applicationId
-  )] 
-}
 const updateAplicationData = () => {
   store.commit(
     "updateMasterApplicationData",
@@ -202,18 +195,25 @@ const updateAplicationData = () => {
     JSON.stringify(applicationsBodyDataMaster.value)
   );
 }
-const updateArchiveData = () => {
+const updateArchiveData = (applicationId) => {
   store.commit(
-    "updateArchiveData",
+    "updateArchive",
     updatedArchivedItems.value
   );
   sessionStorage.setItem(
     "archiveData",
     JSON.stringify(updatedArchivedItems.value)
   );
+  applicationsBodyDataMaster.value = applicationsBodyDataMaster.value.filter(
+    (el) => el.application_id !== applicationId
+  );
+  applicationsBodyDataManager.value = applicationsBodyDataManager.value.filter(
+    (el) => el.application_id !== applicationId
+  );
 }
 
 onMounted(() => {
+  updatedArchivedItems.value = store.state.archiveData
   applicationsBodyDataManager.value = store.state.managerApplicationData;
   applicationsBodyDataMaster.value = store.state.masterApplicationData;
 });

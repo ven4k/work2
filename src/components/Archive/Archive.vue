@@ -2,7 +2,7 @@
   <TableWrapper
     :theader="Object.values(applicationTableHeader)"
     :tbody="archiveBodyData"
-    tableTitle="Архив"
+    tableTitle="Архив заявок"
   />
 </template>
 
