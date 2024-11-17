@@ -36,7 +36,7 @@ watch(() => props.isOpenPopup, (newValue) => {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .popup__wrapper {
   position: fixed;
   top: 0;
@@ -46,7 +46,8 @@ watch(() => props.isOpenPopup, (newValue) => {
   width: 400px;
   height: 100%;
   padding: 30px;
-  border-left: 1px solid black;
+  border-left: 1px solid #ffa726;
+  overflow: hidden;
 }
 .popup__close {
   position: fixed;
@@ -59,5 +60,26 @@ watch(() => props.isOpenPopup, (newValue) => {
 }
 .popup__title {
   font-size: 32px;
+}
+
+.input {
+  width: 95%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ffcc80;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  appearance: none;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #ffa726;
+  box-shadow: 0 0 5px rgba(255, 167, 38, 0.5);
+}
+
+.input:hover {
+  border-color: #ffa726;
 }
 </style>

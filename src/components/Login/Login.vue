@@ -4,8 +4,8 @@
       <h2 style="text-align: center;">Авторизация</h2>
       <div class="form__wrapper">
         <div class="form__inputsWrapper">
-          <input type="text" placeholder="Логин" v-model="login" />
-          <input type="password" placeholder="Пароль" v-model="password" />
+          <input class="form__input" type="text" placeholder="Логин" v-model="login" />
+          <input class="form__input" type="password" placeholder="Пароль" v-model="password" />
         </div>
         <button
           type="submit"
@@ -73,43 +73,50 @@ const handleClickSubmitForm = () => {
   display: flex;
   flex-direction: column;
   border-radius: 8px;
-  border: 2px solid black;
+  border: 2px solid #ff8c00;
   justify-content: space-between;
   gap: 20px;
   padding: 40px;
   background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .form__inputsWrapper {
   display: flex;
   flex-direction: column;
   gap: 8px;
   position: relative;
 }
+
 .form__loginBtn {
-  background-color: #3b82f6;
+  background-color: #ff8c00;
   color: #fff;
   border: none;
   cursor: pointer;
   border-radius: 8px;
   width: 100%;
-  height: 25px;
-  transition: 0.3s;
+  height: 40px;
+  font-size: 1rem;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .form__loginBtn:hover {
-  background-color: #3b82f6;
-  box-shadow: 0 0 0 5px #3b83f65f;
-  color: #fff;
+  background-color: #ffa500;
+  box-shadow: 0 0 0 5px rgba(255, 140, 0, 0.3);
 }
 
 .form__input {
-  border: solid 1.5px #9e9e9e;
-  border-radius: 1rem;
+  border: solid 1.5px #ff8c00;
+  border-radius: 6px;
   background: none;
-  padding: 1rem;
-  font-size: 1rem;
+  padding: 16px;
+  font-size: 16px;
   color: black;
   transition: border 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form__input:focus {
+  border: solid 1.5px #ff8c00;
 }
 .form__wrongData {
   border: 1px solid red;

@@ -21,8 +21,9 @@ const props = defineProps({
   position: fixed;
   top: 0;
   left: 0;
+  border-right: 1px solid #ffa726;
   background-color: #f7f7f7;
-  max-width: 160px;
+  max-width: 180px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -35,9 +36,8 @@ const props = defineProps({
     cursor: pointer;
   }
   &__activeItem {
-    color: red ;
     border-radius: 8px;
-    background-color: lightblue ;
+    background-color: #ffa726 ;
   }
 }
 </style>

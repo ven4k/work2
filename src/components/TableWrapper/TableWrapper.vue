@@ -20,10 +20,15 @@
               <span v-if="isApplication && !isPossibleDeleteItem">
                 {{ row[key] ? row[key] : "-" }}
               </span>
-              <span v-if="isApplication && isPossibleDeleteItem && key !== 'status'">
+              <span
+                v-if="isApplication && isPossibleDeleteItem && key !== 'status'"
+              >
                 {{ row[key] ? row[key] : "-" }}
               </span>
-              <select v-if="(isApplication && isPossibleDeleteItem) && key === 'status'" @change="handleUpdateTableData($event, row.application_id)">
+              <select
+                v-if="isApplication && isPossibleDeleteItem && key === 'status'"
+                @change="handleUpdateTableData($event, row.application_id)"
+              >
                 <option value="">Не выбрано</option>
                 <option
                   v-for="item in applicationStatusData"
@@ -34,8 +39,28 @@
                 </option>
               </select>
             </td>
-            <td v-if="isApplication && !isPossibleDeleteItem && row.status !== 'Одобрено'" style="width: 10%">
-              <button @click="handleAcceptAplication(row.application_id, row.operation_type, row.catalog_item_count, row.catalog_id)">Выполнить</button>
+            <td
+              v-if="
+                isApplication &&
+                !isPossibleDeleteItem &&
+                row.status !== 'Одобрено'
+              "
+              style="width: 10%"
+            >
+              <button
+                :disabled="catalogItemCount?.left < row.catalog_item_count"
+                @click="
+                  handleAcceptAplication(
+                    row.application_id,
+                    row.operation_type,
+                    row.catalog_item_count,
+                    row.catalog_id
+                  )
+                "
+              >
+                Выполнить
+              </button>
+              <div v-if="catalogItemCount?.left < row.catalog_item_count" style="color: red">Извините, на складе не хватает данного товара :(</div>
             </td>
             <td v-if="isPossibleDeleteItem" @click="$emit('deleteData', row)">
               X
@@ -43,7 +68,9 @@
           </tr>
         </tbody>
       </table>
-      <div class="emptyTable" v-if="!tbody.length">Здесь пока ничего нет :(</div>
+      <div class="emptyTable" v-if="!tbody.length">
+        Здесь пока ничего нет :(
+      </div>
     </div>
     <MainButton
       v-if="isPossibleAddItem"
@@ -55,6 +82,7 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import MainButton from "../Buttons/MainButton/MainButton.vue";
 
 const props = defineProps({
@@ -67,14 +95,22 @@ const props = defineProps({
   isApplication: { type: Boolean, default: false },
   applicationStatusData: { type: Array, default: () => [] },
 });
-const emit = defineEmits(["addData", "deleteData", "updateTableData", "acceptApplication"]);
+const emit = defineEmits([
+  "addData",
+  "deleteData",
+  "updateTableData",
+  "acceptApplication",
+]);
+const catalogItemCount = computed(() =>
+  props.catalog.find((item) => item.catalog_id === catalogId.value)
+);
 const handleUpdateTableData = (status, applicationId) => {
   emit("updateTableData", status.target.value, applicationId);
 };
 const handleAcceptAplication = (applicationId, action, itemCount, itemId) => {
-  console.log('click')
-  emit('acceptApplication', applicationId, action, itemCount, itemId)
-}
+  console.log("click");
+  emit("acceptApplication", applicationId, action, itemCount, itemId);
+};
 </script>
 
 <style lang="scss">
@@ -82,6 +118,7 @@ const handleAcceptAplication = (applicationId, action, itemCount, itemId) => {
   overflow-x: auto;
   table-layout: fixed !important;
 }
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -93,8 +130,8 @@ const handleAcceptAplication = (applicationId, action, itemCount, itemId) => {
 }
 
 .table thead tr {
-  background-color: #009879;
-  color: #ffffff;
+  background-color: #ffa73a;
+  color: #000;
   font-weight: bold;
 }
 
@@ -108,23 +145,37 @@ const handleAcceptAplication = (applicationId, action, itemCount, itemId) => {
 }
 
 .table tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
+  background-color: #fff3e0;
 }
 
 .table tbody tr:last-of-type {
-  border-bottom: 2px solid #009879;
+  border-bottom: 2px solid #ff8c00;
 }
 
 .table tbody tr:hover {
-  background-color: #f5f5f5;
+  background-color: #ffe0b2;
   cursor: pointer;
 }
+
 .tableAddBtn {
   margin: 10px 0 0 0;
+  background-color: #ff8c00;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
+
+.tableAddBtn:hover {
+  background-color: #ffa500;
+}
+
 .emptyTable {
   font-size: 24px;
   text-align: center;
   padding: 20px;
+  color: #ff8c00;
 }
 </style>

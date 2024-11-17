@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%;">
     <div v-for="element in selectData">
       <h4>{{ element.label }}</h4>
       <select class="createFormSelect" v-model="formValues[element.dataName]">
@@ -15,18 +15,23 @@
     </div>
     <div
       class="errorText"
-      v-if="formValues.opertionType === 'Выдача' && catalogItemCount?.leftCount < 1"
+      v-if="
+        formValues.opertionType === 'Выдача' && catalogItemCount?.leftCount < 1
+      "
     >
       Извините, но выбранного вами товара нет в наличии :(
     </div>
-    <input
-      class="catalogItemCount"
-      type="number"
-      v-model="formValues.count"
-      :max="catalogItemCount?.leftCount"
-      placeholder="Количество"
-      @input="validateCount"
-    />
+    <div class="catalogItemCountWrapper">
+      <h4>Количество товара</h4>
+      <input
+        class="catalogItemCount"
+        type="number"
+        v-model="formValues.count"
+        :max="catalogItemCount?.leftCount"
+        placeholder="Количество"
+        @input="validateCount"
+      />
+    </div>
     <MainButton
       class="createBtn"
       @click="handleCreateData"
@@ -37,7 +42,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, computed } from "vue";
 import MainButton from "../Buttons/MainButton/MainButton.vue";
 
 const emit = defineEmits(["close", "addData"]);
@@ -130,7 +135,7 @@ const handleCreateData = () => {
   width: 100%;
   padding: 10px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid #ffcc80;
   border-radius: 4px;
   background-color: #fff;
   color: #333;
@@ -142,33 +147,66 @@ const handleCreateData = () => {
   background-position: right 10px center;
   background-size: 12px;
   cursor: pointer;
-
-  &:focus {
-    outline: none;
-    border-color: #009879;
-    box-shadow: 0 0 5px rgba(0, 152, 121, 0.5);
-  }
-
-  &:hover {
-    border-color: #009879;
-  }
-
-  &:disabled {
-    background-color: #f5f5f5;
-    color: #999;
-    cursor: not-allowed;
-  }
 }
+
+.createFormSelect:focus {
+  outline: none;
+  border-color: #ffa726;
+  box-shadow: 0 0 5px rgba(255, 167, 38, 0.5);
+}
+
+.createFormSelect:hover {
+  border-color: #ffa726;
+}
+
+.createFormSelect:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
 .createBtn {
   margin-top: 24px;
+  background-color: #ffa726;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
+
+.createBtn:hover {
+  background-color: #fb8c00;
+}
+
 .errorText {
   font-size: 18px;
-  color: red;
+  color: #ff5722;
+}
+.catalogItemCountWrapper {
+  margin-top: 10px;
+  width: 100%;
+  box-sizing: border-box; /* Убеждаемся, что отступы включены в общую ширину */
 }
 .catalogItemCount {
-  width: 100%;
+  width: 95%;
   padding: 10px;
   font-size: 16px;
+  border: 1px solid #ffcc80;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  appearance: none;
+}
+
+.catalogItemCount:focus {
+  outline: none;
+  border-color: #ffa726;
+  box-shadow: 0 0 5px rgba(255, 167, 38, 0.5);
+}
+
+.catalogItemCount:hover {
+  border-color: #ffa726;
 }
 </style>
