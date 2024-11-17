@@ -59,7 +59,7 @@
                   )
                 "
               >
-                Выполнить {{ catra }}
+                Выполнить
               </button>
               <div v-if="catalogItemCount(row.catalog_id)?.left < row.catalog_item_count" style="color: red">Извините, на складе не хватает данного товара :(</div>
             </td>
@@ -111,7 +111,6 @@ const handleUpdateTableData = (status, applicationId) => {
   emit("updateTableData", status.target.value, applicationId);
 };
 const handleAcceptAplication = (applicationId, action, itemCount, itemId) => {
-  console.log("click");
   emit("acceptApplication", applicationId, action, itemCount, itemId);
 };
 </script>
