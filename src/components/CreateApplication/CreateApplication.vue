@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%;">
+  <div style="width: 100%">
     <div v-for="element in selectData">
       <h4>{{ element.label }}</h4>
       <select class="createFormSelect" v-model="formValues[element.dataName]">
@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import MainButton from "../Buttons/MainButton/MainButton.vue";
 
 const emit = defineEmits(["close", "addData"]);
@@ -110,12 +110,22 @@ const selectData = ref([
 ]);
 
 const validateCount = (count) => {
-  if (formValues.value.count > catalogItemCount.value.leftCount) {
+  if (Number(formValues.value.count) > Number(catalogItemCount.value?.leftCount)) {
     formValues.value.count = catalogItemCount.value.leftCount;
   } else {
     formValues.value.count = count.target.value;
   }
 };
+
+watch(
+  () => formValues.value.catalog,
+  () => {
+    if (Number(formValues.value.count) > Number(catalogItemCount.value?.leftCount)) {
+      formValues.value.count = catalogItemCount.value?.leftCount;
+    }
+  },
+  { immediate: true }
+);
 
 const isDisabledBtn = computed(() => {
   return (

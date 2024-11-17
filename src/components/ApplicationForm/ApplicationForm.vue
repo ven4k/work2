@@ -105,14 +105,7 @@ const handleAddData = (data) => {
     ...applicationsBodyDataMaster.value,
     addData,
   ];
-  store.commit(
-    "updateManagerApplicationData",
-    applicationsBodyDataManager.value
-  );
-  store.commit(
-    "updateMasterApplicationData",
-    applicationsBodyDataMaster.value
-  );
+  updateAplicationData()
   notify({
     duration: 3000,
     type: "success",
@@ -154,6 +147,9 @@ const handleUpdateTableData = (status, applicationId) => {
         if(status === 'Отклонено') {
           updatedData = {...el, status}
           updatedArchivedItems.value = [...updatedArchivedItems.value, updatedData];
+          applicationsBodyDataManager.value = applicationsBodyDataManager.value.filter(
+            (el) => el.application_id !== applicationId
+          );
         }
         return updatedData;
       }
@@ -161,10 +157,8 @@ const handleUpdateTableData = (status, applicationId) => {
     }
   );
   updateArchiveData(applicationId)
-  applicationsBodyDataManager.value = applicationsBodyDataManager.value.filter(
-    (el) => el.application_id !== applicationId
-  );
   updateAplicationData()
+
   notify({
     text: "Статус обновлён!",
     type: "success",
@@ -193,8 +187,15 @@ const handleAcceptAplication = (applicationId, action, itemCount, itemId) => {
     return el
   });
   store.commit("updateCatalog", newCatalog);
+  sessionStorage.setItem(
+    "catalog",
+    JSON.stringify(newCatalog)
+  );
   const archivedItem = applicationsBodyDataMaster.value.find(el => el.application_id === applicationId)
   applicationsBodyDataMaster.value = applicationsBodyDataMaster.value.filter(
+    (el) => el.application_id !== applicationId
+  );
+  applicationsBodyDataManager.value = applicationsBodyDataManager.value.filter(
     (el) => el.application_id !== applicationId
   );
   updatedArchivedItems.value = [...updatedArchivedItems.value, archivedItem]

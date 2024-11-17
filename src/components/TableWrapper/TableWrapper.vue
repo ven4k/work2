@@ -61,7 +61,7 @@
               >
                 Выполнить
               </button>
-              <div v-if="catalogItemCount(row.catalog_id)?.left < row.catalog_item_count" style="color: red">Извините, на складе не хватает данного товара :(</div>
+              <div v-if="catalogItemCount(row.catalog_id)?.leftCount < row.catalog_item_count" style="color: red">Извините, на складе не хватает данного товара :(</div>
             </td>
             <td v-if="isPossibleDeleteItem" @click="$emit('deleteData', row)">
               X
@@ -104,9 +104,7 @@ const emit = defineEmits([
   "updateTableData",
   "acceptApplication",
 ]);
-const catalogItemCount = (catalogId) => {
- return computed(() => store.state.catalog.find((item) => item.catalog_id === catalogId));
-}
+const catalogItemCount = computed(() => (catalogId) => store.state.catalog.find((item) => item.catalog_id === catalogId));
 const handleUpdateTableData = (status, applicationId) => {
   emit("updateTableData", status.target.value, applicationId);
 };
