@@ -9,6 +9,7 @@
               {{ header }}
             </th>
             <th v-if="isPossibleDeleteItem"></th>
+            <th v-if="isApplication && !isPossibleDeleteItem"></th>
           </tr>
         </thead>
         <tbody>
@@ -43,12 +44,12 @@
               v-if="
                 isApplication &&
                 !isPossibleDeleteItem &&
-                row.status !== 'Одобрено'
+                row.status === 'Одобрено'
               "
               style="width: 10%"
             >
               <button
-                :disabled="catalogItemCount?.left < row.catalog_item_count"
+                :disabled="catalogItemCount(row.catalog_id)?.leftCount < row.catalog_item_count"
                 @click="
                   handleAcceptAplication(
                     row.application_id,
@@ -58,9 +59,9 @@
                   )
                 "
               >
-                Выполнить
+                Выполнить {{ catra }}
               </button>
-              <div v-if="catalogItemCount?.left < row.catalog_item_count" style="color: red">Извините, на складе не хватает данного товара :(</div>
+              <div v-if="catalogItemCount(row.catalog_id)?.left < row.catalog_item_count" style="color: red">Извините, на складе не хватает данного товара :(</div>
             </td>
             <td v-if="isPossibleDeleteItem" @click="$emit('deleteData', row)">
               X
@@ -84,7 +85,9 @@
 <script setup>
 import { computed } from "vue";
 import MainButton from "../Buttons/MainButton/MainButton.vue";
+import { useStore } from "vuex"
 
+const store = useStore()
 const props = defineProps({
   tableTitle: { type: String, default: "" },
   theader: { type: Array, default: () => [] },
@@ -101,9 +104,9 @@ const emit = defineEmits([
   "updateTableData",
   "acceptApplication",
 ]);
-const catalogItemCount = computed(() =>
-  props.catalog.find((item) => item.catalog_id === catalogId.value)
-);
+const catalogItemCount = (catalogId) => {
+ return computed(() => store.state.catalog.find((item) => item.catalog_id === catalogId));
+}
 const handleUpdateTableData = (status, applicationId) => {
   emit("updateTableData", status.target.value, applicationId);
 };

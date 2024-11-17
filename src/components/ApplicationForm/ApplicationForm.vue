@@ -141,8 +141,8 @@ const handleUpdateTableData = (status, applicationId) => {
       return el;
     }
   );
-  updateArchiveData(applicationId)
   updateAplicationData()
+  updateArchiveData(applicationId)
   notify({
     text: "Статус обновлён!",
     type: "success",
