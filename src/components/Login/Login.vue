@@ -33,9 +33,9 @@ const isWrongData = ref(false);
 onMounted(() => {
   sessionStorage.clear()
   sessionStorage.setItem("login", "admin");
-  sessionStorage.setItem("login2", "master");
+  sessionStorage.setItem("login2", "manager");
   sessionStorage.setItem("password", "admin");
-  sessionStorage.setItem("password2", "master");
+  sessionStorage.setItem("password2", "manager123");
   if(sessionStorage.getItem('isLogged') || sessionStorage.getItem('isLoggedMaster')) {
     router.replace('/main-menu')
   }
